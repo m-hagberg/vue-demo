@@ -1,33 +1,40 @@
 <template lang="pug">
 #MyFirstSlideshow.eg-theme-agrume
     .eg-slideshow
-        slide(enter="bounceInLeft" leave="bounceOutLeft")
+        slide(enter="bounceInTop" leave="bounceOutLeft")
             h2 Vue.js - an introduction
-            img(src="/static/vue-logo.png" style={'display': 'block', 'margin': '0 auto'})
+            eg-transition(enter="flipInY")
+                img(src="/static/vue-logo.png" style={'display': 'block', 'margin': '0 auto'})
 
-        slide(:steps=5 enter="bounceInRight" leave="bounceOutLeft")
+        slide(:steps=6 enter="bounceInRight" leave="bounceOutLeft")
+            h3 Short history
+            eg-transition(leave="bounceOutLeft")
+                ul(v-if="step <= 6")
+                    eg-transition(enter="flipInX")
+                        li(v-if="step >= 2") Started in late 2013, first release in Feb 2014
+                    eg-transition(enter="flipInX")
+                        li(v-if="step >= 3") Open-source progressive framework for building UI
+                    eg-transition(enter="flipInX")
+                        li(v-if="step >= 4") Created by ex-Google employee
+                            strong  Evan You
+                    eg-transition(enter="flipInX")
+                        li(v-if="step >= 5")
+                            |Vue; pronounced
+                            tt  /vjuː/
+                            |&ndash; like
+                            em “view”
+                    eg-transition(enter="flipInX")
+                        li(v-if="step >= 6") Designed to be incrementally adoptable
+        slide(:steps=2 enter="bounceInRight" leave="bounceOutLeft")
             h3 What is Vue?
-            ul
-                eg-transition(enter='flipInX')
-                    li(v-if='step >= 2') Started in late 2013, first release in Feb 2014
-                eg-transition(enter='flipInX')
-                    li(v-if='step >= 3') Open-source progressive JS framework for building user interfaces
-                eg-transition(enter='flipInX')
-                    li(v-if='step >= 4') Created by ex-Google employee
-                        em  Evan You
-                eg-transition(enter='flipInX')
-                    li(v-if='step >= 5')
-                        |Vue; pronounced
-                        tt /vjuː/
-                        |&ndash; like
-                        em “view”
-                eg-transition(enter='flipInX')
-                    li(v-if='step >= 6') you will see the changes take effect immediately
+            ul(v-if="step >= 2")
+                eg-transition(enter="bounceInRight")
+                    li HTML-based template syntax
 
-        slide(enter="fadeIn")
+        slide(enter="bounceInRight" leave="bounceOutLeft")
             h3 Want cool effects?
             p.
-                Code your own, or try stealing for the other slideshows !
+                Code your own, or try stealing for the other slideshows!
 </template>
 
 <script>
