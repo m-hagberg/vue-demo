@@ -65,7 +65,7 @@
         v-slide
             h4
             eg-code-block(lang="html").
-                &lt;div id="msg"&gt;{{ message }}&lt;/div&gt;
+                &lt;div id="msg"&gt;{{ message }&shy;}&lt;/div&gt;
 
             eg-code-block(lang="javascript").
                 const data = {
@@ -119,42 +119,32 @@
                             isActive: true,
                             hasError: false
                         }
-
-        v-slide
+        v-slide(:steps="2" :mouseNavigation="false")
             eg-modal
-                h5 The Vue instance lifecycle
-
-                .fw-slide
-                    eg-code-block(lang="javascript").
-                        const myApp = new Vue({
-                            data: {
-                                myData: 123
-                            },
-                            created: function() {
-                                // `this` points to the Vue instance
-                                console.log('myData is: ' + this.myData)
-                            }
-                        })
-
-                        myApp.$watch('myData', function(newVal, oldVal) {
-                            // this callback will be called when `myApp.myData` changes
-                            console.log(`${myData} changed from ${oldVal} to ${newVal}`)
-                        })
-
+                h5
+                    |Two-way data binding with
+                    tt.invert v-model
+                twowayBinding
+                eg-transition(enter="fadeIn")
+                    .fw-slide(style={'margin-top': '2rem'} v-if="step >= 2")
+                        eg-code-block(lang="html").
+                            &lt;input v-model="boundValue"&gt;
+                            &lt;p&gt;{{boundValue}&shy;}&lt;/p&gt;
         v-slide
             eg-modal
                 h5 Conditional rendering
 
                 .fw-slide
                     eg-code-block(lang="html").
+                        &lt;!-- Using conditional directives as attributes --&gt;
                         &lt;div v-if="type === 'A'"&gt;
-                            A
+                            Type A
                         &lt;/div&gt;
                         &lt;div v-else-if="type === 'B'"&gt;
-                            B
+                            Type B
                         &lt;/div&gt;
                         &lt;div v-else-if="type === 'C'"&gt;
-                            C
+                            Type C
                         &lt;/div&gt;
                         &lt;div v-else&gt;
                             Neither A/B/C
@@ -226,7 +216,7 @@
                                     return { 'count': 0 }
                                 },
                                 template: ' &lt;button @click.prevent="countClicks"&gt;
-                                                Clicked {&shy;{ count }} times
+                                                Clicked {{ count }&shy;} times
                                             &lt;/button&gt;',
                                 methods: {
                                     'countClicks': function() {
@@ -245,7 +235,91 @@
         slide(:steps="2" enter="bounceInUp" leave="bounceOutUp")
             eg-modal
                 h5 Simple SPA routing
+                .fw-slide(v-if="step >= 1" style={'font-size': '1.75rem'})
+                    p(style={'text-align': 'left'}) Using VueRouter, we want to:
+                    ol
+                        li
+                            |Set a frontend route at
+                            tt.invert example.com/user/&lt;id&gt;
+                        li Render a "User" component at the route
+                        li
+                            |Allow the "User" component to pass in the
+                            tt.invert &lt;id&gt;
+                            |using the
+                            tt.invert $route
+                            |object's params key:
+                            tt.invert $route.params.id
+                        li
+                            |Render the routes and instantiate app in an
+                            tt.invert #app
+                            |element
+                eg-transition(enter="fadeIn")
+                    .fw-slide(v-if="step >= 2" style={'font-size': '1.75rem'})
+                        p(style={'text-align': 'left'}) How it's done:
+                        .col-2
+                            eg-code-block(lang="javascript").
+                                const myUserComponent = {
+                                    template: '&lt;p&gt;User {{ $route.params.id }&shy;}&lt;/p&gt;'
+                                }
 
+                                const router = new VueRouter({
+                                    routes: [
+                                        { path: '/user/:id', component: myUserComponent }
+                                    ]
+                                })
+                            eg-code-block(lang="html").
+                                &lt;div id="app"&gt;
+                                    &lt;router-view&gt;&lt;/router-view&gt;
+                                &lt;/div&gt;
+
+        v-slide
+            h3 And much more...
+            sub
+                ul
+                    li Single-file components
+                    li Component-scoped CSS
+                    li CommonJS modules
+                    li Vue Devtools
+                    li Built-in transitions
+                    li Dynamic &amp; async components
+                    li Custom events and directives
+                    li Typescript support
+                    li Unit testing
+                    li State management with Vuex, or even with Redux (!)
+                    li Server-side rendering
+                    li Tons of open-source plugins, components, and utilities
+
+        v-slide
+            h3 Bottom line
+            p You should definitely check out Vue if...
+            sub
+                ul
+                    li you like really clean code
+                    li you want something flexible and modular
+                    li you want the easiest learning curve
+                    li you want the most lightweight framework
+                    li you want separation of concerns in one file
+                    li you are working alone or have a small team
+                    li you work with designers and need clean HTML files
+                    li you like using templates
+
+        v-slide
+            h5 Bonus: 2-minute <em>no-config</em> setup
+            eg-code-block(lang="bash")  $ npm i -D poi
+            tt index.js
+            eg-code-block(lang="javascript").
+                import Vue from 'vue'
+
+                new Vue({
+                    el: '#app',
+                    render() {
+                        return <p style="display: inline; font-size: 1.5rem;">&lt;h1&gt;Hello Vue.&lt;/h1&gt;</p>
+                    }
+                })
+
+        v-slide(:mouseNavigation="false")
+            h3 Fin'
+            h1 🎉
 </template>
 
 <script>
@@ -253,6 +327,9 @@ import eagle from 'eagle.js'
 
 const TransitionedSlide = {
     mixins: [eagle.slide],
+    data: {
+        boundValue: ''
+    },
     props: {
         enter: { default: 'bounceInRight' },
         leave: { default: 'bounceOutLeft' }
@@ -260,7 +337,7 @@ const TransitionedSlide = {
 }
 
 const buttonClicked = {
-    props: 'initial_count',
+    props: ['initial_count'],
     data: function () {
         return { 'count': 0 }
     },
@@ -275,6 +352,18 @@ const buttonClicked = {
     }
 }
 
+const twowayBinding = {
+    data: function () {
+        return { boundValue: 'Data binding' }
+    },
+    template: '<p><input @keyup="doThings" v-model="boundValue" style="background: #fff" spellcheck="false"> = <span>{{boundValue}}</span></p>',
+    methods: {
+        'doThings': function () {
+            this.boundValue += ' ftw'
+        }
+    }
+}
+
 export default {
     mixins: [ eagle.slideshow ],
     infos: {
@@ -284,7 +373,8 @@ export default {
     },
     components: {
         'v-slide': TransitionedSlide,
-        'buttonclicked': buttonClicked
+        'buttonclicked': buttonClicked,
+        'twowayBinding': twowayBinding
     }
 }
 </script>
@@ -363,9 +453,27 @@ export default {
         margin: 0 auto;
     }
 
-    button:hover {
+    button:hover,
+    tt.invert {
         background-color: #e2e6ea;
         border-color: #dae0e5;
+    }
+
+    tt.invert {
+        color: #212529;
+        margin: 0 1rem;
+        padding: .25rem 1rem;
+        border-radius: 5px;
+    }
+
+    .col-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 0 2rem;
+
+        .hljs.box {
+            display: inherit;
+        }
     }
 
     .hljs{display:block;overflow-x:auto;padding:0.5em;color:#333;background:#f8f8f8}.hljs-comment,.hljs-quote{color:#998;font-style:italic}.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:bold}.hljs-number,.hljs-literal,.hljs-variable,.hljs-template-variable,.hljs-tag .hljs-attr{color:#008080}.hljs-string,.hljs-doctag{color:#d14}.hljs-title,.hljs-section,.hljs-selector-id{color:#900;font-weight:bold}.hljs-subst{font-weight:normal}.hljs-type,.hljs-class .hljs-title{color:#458;font-weight:bold}.hljs-tag,.hljs-name,.hljs-attribute{color:#000080;font-weight:normal}.hljs-regexp,.hljs-link{color:#009926}.hljs-symbol,.hljs-bullet{color:#990073}.hljs-built_in,.hljs-builtin-name{color:#0086b3}.hljs-meta{color:#999;font-weight:bold}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:bold}
