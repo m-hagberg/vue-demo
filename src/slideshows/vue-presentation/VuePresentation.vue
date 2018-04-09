@@ -319,7 +319,10 @@
 
         v-slide(:mouseNavigation="false")
             h3 Fin'
-            h1 🎉
+            eg-transition(enter="flipInY")
+                img(src="/static/vue-logo.png" style={'display': 'block', 'margin': '0 auto', 'width': '25vw'})            
+            small
+                a(href="mailto:mattias.hagberg@istone.com" style={'color': '#47B784'}) mattias.hagberg@istone.com
 </template>
 
 <script>
